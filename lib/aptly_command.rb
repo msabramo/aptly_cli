@@ -39,6 +39,18 @@ class AptlyCommand
         end
 
         @config[k.to_sym] = value
+       elsif v == '${1PASSWORD}'
+        require '1pass'
+
+        agile_keychain = AgileKeychain.new
+
+        master_password = password("Enter 1Password master password to access #{k}:")
+        value = agile_keychain.load(
+          master_password,
+          "aptly API at #{@config[:server]}:#{@config[:port]}",
+          'value'
+        )
+        @config[k.to_sym] = value
       end
     end
 
